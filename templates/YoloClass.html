@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<head>
+    <title>Mini Project 3</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <a class="active" href="/yolo">Upload</a>
+      </div>
+      
+      <div>
+          <h4><p>Yolo Model Results</p></h4> 
+      </div>
+      <div>
+        <img src="{{ url_for('static', filename='images/results.png') }}" alt="Your Image">
+      </div>
+</body>

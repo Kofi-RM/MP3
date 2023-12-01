@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <title>Mini Project 3</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        
+    </div>
+    <div>
+        <form action ="/vit" method = "POST">
+            <h2> Vit Model</h2>
+            <p>The Vit Model is a flexible model that treats images as sequences 
+                of patches and puts these through many transformer layers. Often pretrained on large datasets
+            
+            </p>
+            <input type="submit" id = "vitbutton" value = "Classify with Vit" class = "button">
+        </form>
+
+        <form action ="/yolo" method = "POST">
+            <h2>Yolo Model</h2>
+            <p>The YOLO model stands for You Only Look Once (single dectection stage) and is optimal for real time object detection.
+                It splits images into a grid and makes classification probabilities for each.
+            </p>
+        <input type="submit" id = "yolobutton" value = "Classify with Yolo" class = "button">
+        </form>      
+</body>
+
+<footer> 
+    <h1> INFO 4160</h1>
+</footer>
+</html>

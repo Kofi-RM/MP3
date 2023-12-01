@@ -1,0 +1,35 @@
+/* CSS comment - not necessary, but helpful for documentation */
+
+
+/* Style all paragraphs */
+p {
+    color: black;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+body {
+    background-color: lightblue;
+  }
+
+  .button {
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+   
+    padding: 10px 10px 10px 10px;
+    border:1px solid black;
+  }
+
+  span {
+
+    color: black;
+    font-size: 34px;
+    font-weight: lighter;
+  }
+
+  .active {
+    font-size: 26px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }

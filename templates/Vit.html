@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <title>Mini Project 3</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+      </div>
+      <div>
+        <form action="/uploadVit" method="post" enctype="multipart/form-data">
+          <label for="imgFile">Select an image:</label>
+          <input type="file" id="imgFile" name="imgFile">
+          <input type="submit" value="Upload">
+        </form>
+        
+      </div>
+
+      <div>
+        <p>{{Message}}</p>
+      </div>
+      
+      <div>
+        <form action ="/vitclass" method = "POST">
+          <h4><p>After uploading an image, click below to classify with the Vit Model</p></h4>
+      <input type="submit" value = "Classify" class = "button">
+      </form>      
+        
+      </div>
+</body>

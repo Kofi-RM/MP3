@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<head>
+    <title>Mini Project 3</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <a class="active" href="/vit">Upload</a>
+      </div>
+
+      <div>     
+          <p>Vit Model Results</p>      
+      </div>
+      <div>
+        <h2>{{Prediction}}</h2>
+      </div>
+</body>

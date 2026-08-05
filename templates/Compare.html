@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare Models - ViT vs YOLO</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/compare.css') }}">
+   <script src="{{ url_for('static', filename='js/compare.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Model Comparison</h1>
+        <p class="subtitle">Upload once and compare ViT vs YOLO side-by-side</p>
+        
+        <!-- Upload Section -->
+        <div class="upload-box" id="dropZone">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">
+                <strong>Click to upload</strong> or drag and drop an image
+            </div>
+            <div class="upload-text" style="font-size: 14px; color: #999; margin-top: 5px;">
+                Supports: PNG, JPG, JPEG, WEBP
+            </div>
+            <div class="file-name" id="fileName"></div>
+            <input type="file" name="imgFile" id="fileInput" accept="image/*">
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="btn" id="compareBtn" disabled>🔍 Compare Models</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🗑️ Clear</button>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden" style="text-align: center; padding: 40px;">
+            <div class="spinner"></div>
+            <p style="color: #666; font-size: 18px;">Processing your image with both models...</p>
+            <p style="color: #999; font-size: 14px;">This may take a few seconds</p>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="results-grid">
+                <!-- YOLO Result -->
+                <div class="result-card yolo-card" id="yoloResult">
+                    <div class="card-header">
+                        <span class="card-title">🎯 YOLO</span>
+                        <span class="badge yolo">Object Detection</span>
+                    </div>
+                    <div id="yoloContent">
+                        <div class="loading">Waiting for results...</div>
+                    </div>
+                </div>
+                
+                <!-- ViT Result -->
+                <div class="result-card vit-card" id="vitResult">
+                    <div class="card-header">
+                        <span class="card-title">🧠 ViT</span>
+                        <span class="badge vit">Classification</span>
+                    </div>
+                    <div id="vitContent">
+                        <div class="loading">Waiting for results...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison Summary -->
+            <div class="comparison-summary" id="comparisonSummary">
+                <h3>📊 Comparison Summary</h3>
+                <div class="comparison-stats" id="comparisonStats">
+                    <div class="stat-item">
+                        <div class="label">Processing Time</div>
+                        <div class="value" id="totalTime">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/">🏠 Home</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+/* ========================================
+   HOME PAGE STYLES - home.css
+   Only for Home.html
+   ======================================== */
+
+body.home-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+.home-container {
+    background: white;
+    border-radius: 30px;
+    padding: 60px;
+    max-width: 700px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    font-size: 80px;
+    margin-bottom: 10px;
+}
+
+.home-title {
+    font-size: 2.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.home-subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* ===== FEATURES GRID ===== */
+.features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.feature-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s;
+}
+
+.feature-item:hover {
+    transform: scale(1.02);
+}
+
+.feature-item .icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.feature-item .text {
+    font-size: 14px;
+    color: #555;
+}
+
+.feature-item .text strong {
+    color: #333;
+    display: block;
+}
+
+/* ===== START BUTTON ===== */
+.btn-start {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 18px 50px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 10px;
+}
+
+.btn-start:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-start .arrow {
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.btn-start:hover .arrow {
+    transform: translateX(8px);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    margin-top: 30px;
+    color: #999;
+    font-size: 13px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .home-container {
+        padding: 30px;
+    }
+    
+    .home-title {
+        font-size: 2rem;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+    }
+}

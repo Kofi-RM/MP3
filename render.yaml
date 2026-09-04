@@ -1,0 +1,12 @@
+# This defines a PAID 2 GB service. Review pricing before creating the Blueprint.
+services:
+  - type: web
+    name: model-compare
+    runtime: docker
+    plan: 1c-2g
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true

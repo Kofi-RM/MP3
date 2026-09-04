@@ -90,6 +90,11 @@
       const controller = new AbortController(); pending = controller;
       timeout = setTimeout(() => controller.abort(), 20000);
       const response = await fetch('/api/yolo/frame',{method:'POST',body:form,signal:controller.signal});
+      if (response.status === 503 && running && token === epoch) {
+        status('Models busy · retrying shortly…');
+        timer = setTimeout(() => tick(token), 1000);
+        return;
+      }
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Frame analysis failed.');
       if (!running || token !== epoch) return;

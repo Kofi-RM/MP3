@@ -5,3 +5,4 @@ transformers==5.16.1
 torch==2.14.0+cpu
 torchvision==0.29.0+cpu
 Pillow==12.3.0
+gunicorn>=23,<24; sys_platform != 'win32'

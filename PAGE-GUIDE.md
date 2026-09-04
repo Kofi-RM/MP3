@@ -13,7 +13,7 @@ inherited layouts, or generated asset links to follow.
 - `static/css/yolo.css`: webcam/video studio styling.
 - `static/js/compare.js`: image upload and displaying comparison results.
 - `static/js/yolo.js`: camera/video controls and detection boxes.
-- `Flask.py`: Python server and AI model processing.
+- `app.py`: Python server and AI model processing.
 
 Section comments in the HTML mark the navigation, upload controls, results, and
 other major areas. CSS classes control appearance; JavaScript uses the `id`
@@ -28,3 +28,6 @@ Double-click `start.cmd` and open http://127.0.0.1:5000.
 The pages use plain links such as `/static/css/styles.css` and `/yolo`.
 Flask still handles the routes and AI requests; Live Server cannot run Python
 or process camera frames and image uploads.
+
+For hosting, follow `DEPLOY-RENDER.md`. The Render Blueprint uses Docker so
+Python, OpenCV system libraries, and model weights ship together.

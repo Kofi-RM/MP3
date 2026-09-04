@@ -1,0 +1,21 @@
+# Allow only deployment inputs into Docker's build context.
+**
+!Dockerfile
+!requirements.txt
+!app.py
+!gunicorn.conf.py
+!yolov8n.pt
+!scripts/
+!scripts/download_models.py
+!templates/
+!templates/*.html
+!static/
+!static/css/
+!static/css/styles.css
+!static/css/compare.css
+!static/css/yolo.css
+!static/js/
+!static/js/compare.js
+!static/js/yolo.js
+!static/images/
+!static/images/car1.jpg

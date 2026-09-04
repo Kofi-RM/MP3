@@ -1,82 +1,136 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Compare Models - ViT vs YOLO</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/compare.css') }}">
-   <script src="{{ url_for('static', filename='js/compare.js') }}" defer></script>
-</head>
-<body>
-    <div class="container">
-        <h1>🔬 Model Comparison</h1>
-        <p class="subtitle">Upload once and compare ViT vs YOLO side-by-side</p>
-        
-        <!-- Upload Section -->
-        <div class="upload-box" id="dropZone">
-            <div class="upload-icon">📤</div>
-            <div class="upload-text">
-                <strong>Click to upload</strong> or drag and drop an image
+<html lang="en">
+
+  <!-- Page title, stylesheets, and JavaScript -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f2">
+    <meta name="description" content="Explore how YOLO and Vision Transformer interpret images side by side.">
+    <title>Playground — Model Compare</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/compare.css">
+    <script src="/static/js/compare.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Site logo and navigation -->
+    <header class="site-header shell">
+      <a href="/" class="brand" aria-label="Model Compare home"><span class="brand-mark" aria-hidden="true">▧</span>model<span class="brand-light">compare</span><span class="lab-tag">LAB</span></a>
+      <nav aria-label="Main navigation">
+        <a class="yolo-nav" href="/yolo">YOLO Studio</a>
+        <a href="/#how-it-works">How it works</a>
+        <a class="nav-cta" href="/compare" aria-current="page">Compare <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <!-- Main page content -->
+    <main id="main" class="shell playground">
+      <div class="playground-heading">
+        <div>
+          <div class="eyebrow"><span class="status-dot"></span>THE VISION PLAYGROUND</div>
+          <h1>A fresh perspective.<br><em>Just one upload away.</em></h1>
+        </div>
+        <p>Give two models the same image.<br>Discover what each one sees.</p>
+      </div>
+      <div class="workspace">
+
+        <!-- Image upload and compare controls -->
+        <section class="upload-panel" aria-labelledby="upload-heading">
+          <div class="panel-title">
+            <h2 id="upload-heading">Your image</h2>
+            <span class="small-label">01 / INPUT</span>
+          </div>
+          <label class="upload-box" id="dropZone" for="fileInput">
+            <input type="file" name="imgFile" id="fileInput" accept="image/png,image/jpeg,image/gif">
+            <img id="uploadPreview" class="hidden" alt="Selected image preview">
+            <span class="upload-prompt" id="uploadPrompt"><span class="upload-icon" aria-hidden="true">↥</span><strong>Drop an image here</strong><span>or <u>browse your files</u></span></span>
+            <span class="upload-hint">JPG, PNG, GIF · Up to 16 MB</span>
+          </label>
+          <div class="file-name" id="fileName" aria-live="polite">A new point of view starts here.</div>
+          <div class="upload-actions">
+            <button class="button primary" id="compareBtn" disabled>Compare models <span aria-hidden="true">↗</span></button>
+            <button class="button secondary" id="clearBtn" disabled>Clear</button>
+          </div>
+          <p id="errorMessage" class="error hidden" role="alert"></p>
+          <p class="upload-footnote">Your image is sent to the server for analysis.</p>
+        </section>
+
+        <!-- Explanation of the two models -->
+        <aside class="model-panel">
+          <div class="panel-title">
+            <h2>Meet your models</h2>
+            <span class="small-label">02 / PERSPECTIVES</span>
+          </div>
+          <article class="model-info">
+            <span class="model-icon">⌖</span>
+            <div>
+              <div class="model-title">
+                <h3>YOLOv8</h3>
+                <span class="badge yolo">Detection</span>
+              </div>
+              <p>“What objects are here, and where?”</p>
+              <span>Locates objects with bounding boxes and a confidence score for each detection.</span>
             </div>
-            <div class="upload-text" style="font-size: 14px; color: #999; margin-top: 5px;">
-                Supports: PNG, JPG, JPEG, WEBP
+          </article>
+          <article class="model-info">
+            <span class="model-icon vit-icon">▦</span>
+            <div>
+              <div class="model-title">
+                <h3>Vision Transformer</h3>
+                <span class="badge vit">Classification</span>
+              </div>
+              <p>“What does this image represent?”</p>
+              <span>Looks at the whole image and returns its five most likely classifications.</span>
             </div>
-            <div class="file-name" id="fileName"></div>
-            <input type="file" name="imgFile" id="fileInput" accept="image/*">
+          </article>
+          <div class="insight-note">
+            <span aria-hidden="true">✳</span>
+            <p>
+              Different tasks, complementary insights. Confidence scores describe each model’s own
+              predictions—not a head-to-head accuracy score.
+            </p>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Shown while the server analyzes the image -->
+      <section id="loadingState" class="loading-state hidden" role="status">
+        <div class="spinner"></div>
+        <div>
+          <h3>Looking at the bigger picture…</h3>
+          <p>Running object detection and image classification. This may take a moment.</p>
         </div>
-        
-        <div style="text-align: center;">
-            <button class="btn" id="compareBtn" disabled>🔍 Compare Models</button>
-            <button class="btn btn-secondary" onclick="resetForm()">🗑️ Clear</button>
+      </section>
+
+      <!-- Results filled in by compare.js -->
+      <section id="resultsSection" class="hidden" aria-label="Comparison results" aria-live="polite">
+        <div class="results-heading">
+          <h2>Two perspectives. Side by side.</h2>
+          <span class="small-label">03 / RESULTS</span>
         </div>
-        
-        <!-- Loading State -->
-        <div id="loadingState" class="hidden" style="text-align: center; padding: 40px;">
-            <div class="spinner"></div>
-            <p style="color: #666; font-size: 18px;">Processing your image with both models...</p>
-            <p style="color: #999; font-size: 14px;">This may take a few seconds</p>
-        </div>
-        
-        <!-- Results Section -->
-        <div id="resultsSection" class="hidden">
-            <div class="results-grid">
-                <!-- YOLO Result -->
-                <div class="result-card yolo-card" id="yoloResult">
-                    <div class="card-header">
-                        <span class="card-title">🎯 YOLO</span>
-                        <span class="badge yolo">Object Detection</span>
-                    </div>
-                    <div id="yoloContent">
-                        <div class="loading">Waiting for results...</div>
-                    </div>
-                </div>
-                
-                <!-- ViT Result -->
-                <div class="result-card vit-card" id="vitResult">
-                    <div class="card-header">
-                        <span class="card-title">🧠 ViT</span>
-                        <span class="badge vit">Classification</span>
-                    </div>
-                    <div id="vitContent">
-                        <div class="loading">Waiting for results...</div>
-                    </div>
-                </div>
+        <div class="results-grid">
+          <article class="result-card yolo-card">
+            <div class="card-header">
+              <h3>YOLOv8</h3>
+              <span class="badge yolo">Object detection</span>
             </div>
-            
-            <!-- Comparison Summary -->
-            <div class="comparison-summary" id="comparisonSummary">
-                <h3>📊 Comparison Summary</h3>
-                <div class="comparison-stats" id="comparisonStats">
-                    <div class="stat-item">
-                        <div class="label">Processing Time</div>
-                        <div class="value" id="totalTime">-</div>
-                    </div>
-                </div>
+            <div id="yoloContent"></div>
+          </article>
+          <article class="result-card vit-card">
+            <div class="card-header">
+              <h3>Vision Transformer</h3>
+              <span class="badge vit">Classification</span>
             </div>
+            <div id="vitContent"></div>
+          </article>
         </div>
-        
-        <div class="nav-links">
-            <a href="/">🏠 Home</a>
-        </div>
-    </div>
-</body>
+        <div class="comparison-summary"><span>One image. Two ways to see it.</span><span>Total request time <strong id="totalTime">—</strong></span></div>
+      </section>
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer shell"><a href="/" class="footer-brand">modelcompare<span> / VISION LAB</span></a><span>Made for exploration. Powered by computer vision.</span><span class="footer-dot" aria-hidden="true">✳</span></footer>
+  </body>
 </html>

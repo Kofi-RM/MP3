@@ -1,54 +1,95 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>AI Model Comparison</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-</head>
-<body class="home-page">
-    <div class="home-container">
-        <div class="logo">🔬</div>
-        <h1 class="home-title">Model Compare</h1>
-        <p class="home-subtitle">Upload once · Compare two AI models side-by-side</p>
-        
-        <div class="features">
-            <div class="feature-item">
-                <span class="icon">🎯</span>
-                <div class="text">
-                    <strong>YOLO</strong>
-                    Object detection with bounding boxes
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="icon">🧠</span>
-                <div class="text">
-                    <strong>ViT</strong>
-                    Vision Transformer classification
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="icon">⚡</span>
-                <div class="text">
-                    <strong>Real-time</strong>
-                    See both models process simultaneously
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="icon">📊</span>
-                <div class="text">
-                    <strong>Compare</strong>
-                    Confidence scores &amp; processing times
-                </div>
-            </div>
+<html lang="en">
+
+  <!-- Page title, stylesheets, and JavaScript -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f2">
+    <meta name="description" content="Explore how YOLO and Vision Transformer interpret images side by side.">
+    <title>Model Compare — A different way to see</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Site logo and navigation -->
+    <header class="site-header shell">
+      <a href="/" class="brand" aria-label="Model Compare home"><span class="brand-mark" aria-hidden="true">▧</span>model<span class="brand-light">compare</span><span class="lab-tag">LAB</span></a>
+      <nav aria-label="Main navigation">
+        <a class="yolo-nav" href="/yolo">YOLO Studio</a>
+        <a href="/#how-it-works">How it works</a>
+        <a class="nav-cta" href="/compare">Compare <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <!-- Main page content -->
+    <main id="main" class="shell">
+
+      <!-- Introduction and comparison preview -->
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>A PLAYGROUND FOR COMPUTER VISION</div>
+          <h1>One image.<br>Two perspectives.<br><em>More insight.</em></h1>
+          <p class="hero-description">See how AI sees your world. Explore object detection and image classification, side by side.</p>
+          <div class="hero-actions"><a class="button primary" href="/compare">Start comparing <span aria-hidden="true">↗</span></a><a class="text-link" href="#how-it-works">How it works <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-note"><span class="mini-mark">⌘</span>Two models. One upload. A clearer picture.</div>
         </div>
-        
-        <a href="/compare" class="btn-start">
-            Get Started <span class="arrow">→</span>
-        </a>
-        
-        <div class="footer">
-            Upload an image and see both models in action
+        <div
+          class="vision-demo"
+          aria-label="Illustrative preview of object detection and image classification"
+        >
+          <div class="demo-top"><span><span class="status-dot"></span> VISION EXPLORER</span><span>01 / 02</span></div>
+          <div class="demo-image">
+            <img src="/static/images/car1.jpg" alt="White car driving along a country road">
+            <div class="detection-box"><span>car <b>98.2%</b></span></div>
+            <span class="image-caption">OBJECT DETECTION · YOLO</span>
+          </div>
+          <div class="demo-bottom">
+            <span class="model-icon">▦</span>
+            <div><span class="small-label">VISION TRANSFORMER</span><strong>A different view of the same image.</strong></div>
+            <span class="demo-arrow">↗</span>
+          </div>
+          <div class="demo-caption">ILLUSTRATIVE PREVIEW <span>YOUR IMAGE. YOUR RESULTS.</span></div>
         </div>
-    </div>
-</body>
+      </section>
+      <section class="model-strip" aria-label="Models available">
+        <span class="small-label">TWO APPROACHES.<br>ONE WORKSPACE.</span>
+        <div><span class="model-symbol">⌖</span><strong>YOLOv8</strong><span>Find the objects</span></div>
+        <div><span class="model-symbol">▦</span><strong>Vision Transformer</strong><span>Understand the image</span></div>
+        <span class="strip-end">Built for curious minds ↗</span>
+      </section>
+
+      <!-- How the comparison works -->
+      <section id="how-it-works" class="how-section">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">FROM PIXELS TO PERSPECTIVE</div>
+            <h2>A little curiosity goes a long way.</h2>
+          </div>
+          <p>No setup. Just an image and a question.</p>
+        </div>
+        <div class="steps">
+          <article>
+            <span class="step-number">01 /</span>
+            <h3>Bring your own image</h3>
+            <p>A street scene, your favorite object, or something unexpected. Drop it in and explore.</p>
+          </article>
+          <article>
+            <span class="step-number">02 /</span>
+            <h3>See two ways of thinking</h3>
+            <p>YOLO locates individual objects. ViT predicts what the image represents as a whole.</p>
+          </article>
+          <article>
+            <span class="step-number">03 /</span>
+            <h3>Look a little closer</h3>
+            <p>Explore predictions, confidence scores, and processing times. Discover where the models differ.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer shell"><a href="/" class="footer-brand">modelcompare<span> / VISION LAB</span></a><span>Made for exploration. Powered by computer vision.</span><span class="footer-dot" aria-hidden="true">✳</span></footer>
+  </body>
 </html>

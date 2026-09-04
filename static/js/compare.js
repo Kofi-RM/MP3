@@ -1,214 +1,58 @@
- const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileName = document.getElementById('fileName');
-        const compareBtn = document.getElementById('compareBtn');
-        const loadingState = document.getElementById('loadingState');
-        const resultsSection = document.getElementById('resultsSection');
-        const yoloContent = document.getElementById('yoloContent');
-        const vitContent = document.getElementById('vitContent');
-        const totalTime = document.getElementById('totalTime');
-        
-        let currentFile = null;
-        
-        // Handle file selection
-        function handleFile(file) {
-            if (file) {
-                // Validate file type
-                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Please upload a valid image file (PNG, JPG, JPEG, WEBP, GIF)');
-                    resetForm();
-                    return;
-                }
-                
-                // Validate size (max 16MB)
-                if (file.size > 16 * 1024 * 1024) {
-                    alert('File too large! Maximum size is 16MB');
-                    resetForm();
-                    return;
-                }
-                
-                currentFile = file;
-                fileName.textContent = `✅ ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                compareBtn.disabled = false;
-                
-                // Reset results
-                resultsSection.classList.add('hidden');
-            }
-        }
-        
-        // Click to upload
-        dropZone.addEventListener('click', () => fileInput.click());
-        
-        // File input change
-        fileInput.addEventListener('change', (e) => {
-            if (fileInput.files.length > 0) {
-                handleFile(fileInput.files[0]);
-            }
-        });
-        
-        // Drag and drop
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-        
-        dropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-        });
-        
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            
-            if (e.dataTransfer.files.length > 0) {
-                fileInput.files = e.dataTransfer.files;
-                handleFile(fileInput.files[0]);
-            }
-        });
-        
-        // Compare button click
-        compareBtn.addEventListener('click', async () => {
-            if (!currentFile) return;
-            
-            // Show loading
-            loadingState.classList.remove('hidden');
-            resultsSection.classList.add('hidden');
-            compareBtn.disabled = true;
-            
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('imgFile', currentFile);
-            
-            try {
-                const startTime = performance.now();
-                
-                // Send to server
-                const response = await fetch('/compare', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const endTime = performance.now();
-                const totalTimeMs = (endTime - startTime) / 1000;
-                
-                if (!response.ok) {
-                    throw new Error('Server error');
-                }
-                
-                const data = await response.json();
-                
-                // Display results
-                displayResults(data, totalTimeMs);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error processing image. Please try again.');
-            } finally {
-                loadingState.classList.add('hidden');
-                compareBtn.disabled = false;
-            }
-        });
-        
-        // Display results
-        function displayResults(data, time) {
-            // YOLO Results
-            if (data.yolo) {
-                let yoloHTML = '';
-                
-                if (data.yolo.detections && data.yolo.detections.length > 0) {
-                    // Show the processed image
-                    if (data.yolo.image) {
-                        yoloHTML += `<img src="data:image/png;base64,${data.yolo.image}" class="result-image" alt="YOLO Detection">`;
-                    }
-                    
-                    yoloHTML += `<div class="result-details">`;
-                    yoloHTML += `<div class="result-item"><span class="result-label">Detections</span><span class="result-value">${data.yolo.detections.length}</span></div>`;
-                    yoloHTML += `<div class="result-item"><span class="result-label">Processing Time</span><span class="result-value">${data.yolo.time.toFixed(3)}s</span></div>`;
-                    yoloHTML += `<div class="result-item"><span class="result-label">Detected Objects</span></div>`;
-                    
-                    // List top detections
-                    data.yolo.detections.slice(0, 5).forEach((det, i) => {
-                        const confPercent = (det.confidence * 100).toFixed(1);
-                        const colorClass = det.confidence > 0.7 ? 'high' : (det.confidence > 0.4 ? 'medium' : 'low');
-                        yoloHTML += `
-                            <div style="margin: 5px 0;">
-                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
-                                    <span>${i+1}. ${det.class}</span>
-                                    <span style="font-weight: bold;">${confPercent}%</span>
-                                </div>
-                                <div class="confidence-bar">
-                                    <div class="confidence-fill ${colorClass}" style="width: ${confPercent}%"></div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    yoloHTML += `</div>`;
-                } else {
-                    yoloHTML = `<div class="loading">No objects detected in this image</div>`;
-                }
-                
-                yoloContent.innerHTML = yoloHTML;
-            }
-            
-            // ViT Results
-            if (data.vit) {
-                let vitHTML = '';
-                
-                if (data.vit.top_predictions) {
-                    // Show original image
-                    if (data.vit.image) {
-                        vitHTML += `<img src="data:image/png;base64,${data.vit.image}" class="result-image" alt="ViT Classification">`;
-                    }
-                    
-                    vitHTML += `<div class="result-details">`;
-                    vitHTML += `<div class="result-item"><span class="result-label">Top Prediction</span><span class="result-value" style="color: #4facfe;">${data.vit.top_prediction}</span></div>`;
-                    vitHTML += `<div class="result-item"><span class="result-label">Confidence</span><span class="result-value">${(data.vit.top_confidence * 100).toFixed(1)}%</span></div>`;
-                    vitHTML += `<div class="result-item"><span class="result-label">Processing Time</span><span class="result-value">${data.vit.time.toFixed(3)}s</span></div>`;
-                    vitHTML += `<div class="result-item"><span class="result-label">Top 5 Predictions</span></div>`;
-                    
-                    // Show top 5 predictions with bars
-                    data.vit.top_predictions.slice(0, 5).forEach((pred, i) => {
-                        const confPercent = (pred.confidence * 100).toFixed(1);
-                        const colorClass = pred.confidence > 0.7 ? 'high' : (pred.confidence > 0.4 ? 'medium' : 'low');
-                        vitHTML += `
-                            <div style="margin: 5px 0;">
-                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
-                                    <span>${i+1}. ${pred.class}</span>
-                                    <span style="font-weight: bold;">${confPercent}%</span>
-                                </div>
-                                <div class="confidence-bar">
-                                    <div class="confidence-fill ${colorClass}" style="width: ${confPercent}%"></div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    vitHTML += `</div>`;
-                } else {
-                    vitHTML = `<div class="loading">No classification results</div>`;
-                }
-                
-                vitContent.innerHTML = vitHTML;
-            }
-            
-            // Update total time
-            totalTime.textContent = `${time.toFixed(2)}s`;
-            
-            // Show results
-            resultsSection.classList.remove('hidden');
-        }
-        
-        // Reset form
-        function resetForm() {
-            fileInput.value = '';
-            fileName.textContent = '';
-            compareBtn.disabled = true;
-            currentFile = null;
-            resultsSection.classList.add('hidden');
-            loadingState.classList.add('hidden');
-            yoloContent.innerHTML = '<div class="loading">Waiting for results...</div>';
-            vitContent.innerHTML = '<div class="loading">Waiting for results...</div>';
-        }
+'use strict';
+const $ = id => document.getElementById(id);
+const dropZone = $('dropZone'), fileInput = $('fileInput'), compareBtn = $('compareBtn');
+let currentFile = null, previewUrl = null, pending = null, generation = 0;
+const hide = (id, value = true) => $(id).classList.toggle('hidden', value);
+function error(message) { $('errorMessage').textContent = message; hide('errorMessage', !message); }
+function clearResults() { hide('resultsSection'); $('yoloContent').replaceChildren(); $('vitContent').replaceChildren(); }
+function cancelRequest() { generation++; if (pending) pending.abort(); pending = null; hide('loadingState'); compareBtn.textContent = 'Compare models ↗'; }
+function resetForm() {
+  cancelRequest(); currentFile = null; fileInput.value = ''; clearResults(); error('');
+  if (previewUrl) URL.revokeObjectURL(previewUrl); previewUrl = null;
+  $('uploadPreview').removeAttribute('src'); hide('uploadPreview'); hide('uploadPrompt', false);
+  $('fileName').textContent = 'A new point of view starts here.'; compareBtn.disabled = true; $('clearBtn').disabled = true;
+}
+function handleFile(file) {
+  if (!file) return;
+  resetForm();
+  if (!/\.(png|jpe?g|gif)$/i.test(file.name) || (file.type && !['image/png','image/jpeg','image/gif'].includes(file.type))) return error('Choose a JPG, PNG, or GIF image.');
+  if (file.size > 16 * 1024 * 1024) return error('This image is too large. Please choose a file under 16 MB.');
+  currentFile = file; previewUrl = URL.createObjectURL(file); $('uploadPreview').src = previewUrl;
+  hide('uploadPreview', false); hide('uploadPrompt');
+  $('fileName').textContent = file.name + ' · ' + (file.size / 1024 / 1024).toFixed(2) + ' MB';
+  compareBtn.disabled = false; $('clearBtn').disabled = false;
+}
+fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+$('uploadPreview').addEventListener('error', () => { if (currentFile) { resetForm(); error('This file could not be opened as an image. Please choose another.'); } });
+dropZone.addEventListener('dragover', event => { event.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', event => { event.preventDefault(); dropZone.classList.remove('dragover'); handleFile(event.dataTransfer.files[0]); });
+$('clearBtn').addEventListener('click', resetForm);
+const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const percent = value => Math.max(0, Math.min(100, Number(value) * 100 || 0));
+const row = (label, value) => '<div class="result-item"><span class="result-label">' + label + '</span><span class="result-value">' + escapeHTML(value) + '</span></div>';
+function predictions(items) { return items.slice(0, 5).map(item => '<div class="prediction"><div class="prediction-label"><span>' + escapeHTML(item.class) + '</span><strong>' + percent(item.confidence).toFixed(1) + '%</strong></div><div class="confidence-bar"><div class="confidence-fill" style="width:' + percent(item.confidence) + '%"></div></div></div>').join(''); }
+function resultImage(base64, alt) { return typeof base64 === 'string' && /^[A-Za-z0-9+/=\s]+$/.test(base64) ? '<img class="result-image" alt="' + alt + '" src="data:image/png;base64,' + base64 + '">' : ''; }
+function displayResults(data, time) {
+  if (!data.yolo || !data.vit) throw new Error('Incomplete response');
+  const detections = data.yolo.detections || [], top = data.vit.top_predictions || [];
+  $('yoloContent').innerHTML = resultImage(data.yolo.image, 'YOLO object detection results') + row('Objects detected', detections.length) + row('Processing time', Number(data.yolo.time).toFixed(3) + ' s') + (detections.length ? predictions(detections) : '<p class="empty-message">No objects detected. Try an image with more clearly visible objects.</p>');
+  $('vitContent').innerHTML = resultImage(data.vit.image, 'Image analyzed by Vision Transformer') + row('Top prediction', data.vit.top_prediction || 'No prediction') + row('Processing time', Number(data.vit.time).toFixed(3) + ' s') + predictions(top);
+  $('totalTime').textContent = time.toFixed(2) + ' s'; hide('resultsSection', false);
+}
+compareBtn.addEventListener('click', async () => {
+  if (!currentFile || pending) return;
+  const requestId = ++generation, controller = new AbortController(); pending = controller;
+  const form = new FormData(); form.append('imgFile', currentFile);
+  clearResults(); error(''); hide('loadingState', false); compareBtn.disabled = true; compareBtn.textContent = 'Comparing…';
+  const start = performance.now();
+  try {
+    const response = await fetch('/compare', {method:'POST', body:form, signal:controller.signal});
+    if (!response.ok) throw new Error('Processing failed');
+    const data = await response.json();
+    if (requestId !== generation) return;
+    displayResults(data, (performance.now() - start) / 1000);
+    $('resultsSection').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'});
+  } catch (err) { if (err.name !== 'AbortError' && requestId === generation) error('We couldn’t process this image. Check that the model server is running and try again.'); }
+  finally { if (requestId === generation) { pending = null; hide('loadingState'); compareBtn.disabled = !currentFile; compareBtn.textContent = 'Compare models ↗'; } }
+});

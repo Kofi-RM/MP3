@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Page title, stylesheets, and JavaScript -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f2">
+    <meta name="description" content="Explore how YOLO and Vision Transformer interpret images side by side.">
+    <title>YOLO Studio — Model Compare</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/compare.css">
+    <link rel="stylesheet" href="/static/css/yolo.css">
+    <script src="/static/js/yolo.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Site logo and navigation -->
+    <header class="site-header shell">
+      <a href="/" class="brand" aria-label="Model Compare home"><span class="brand-mark" aria-hidden="true">▧</span>model<span class="brand-light">compare</span><span class="lab-tag">LAB</span></a>
+      <nav aria-label="Main navigation">
+        <a class="yolo-nav" href="/yolo" aria-current="page">YOLO Studio</a>
+        <a href="/#how-it-works">How it works</a>
+        <a class="nav-cta" href="/compare">Compare <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <!-- Main page content -->
+    <main id="main" class="shell playground">
+      <div class="playground-heading">
+        <div>
+          <div class="eyebrow"><span class="status-dot"></span> YOLO STUDIO / OBJECT DETECTION</div>
+          <h1>The world in motion.<br><em>A new way to see it.</em></h1>
+        </div>
+        <p>Try your camera or a video file.<br>Find objects, one frame at a time.</p>
+      </div>
+
+      <!-- Switch between webcam and video-file modes -->
+      <div class="studio-toolbar">
+        <div class="mode-switch" role="group" aria-label="Source type">
+          <button id="webcamMode" aria-pressed="true">Webcam</button>
+          <button id="videoMode" aria-pressed="false">Video file</button>
+        </div>
+        <span class="studio-status" id="studioStatus" role="status">Ready when you are</span>
+      </div>
+      <div class="studio-grid">
+
+        <!-- Analyzed video frame and detection statistics -->
+        <section class="viewer-panel" aria-labelledby="viewerTitle">
+          <div class="panel-title">
+            <h2 id="viewerTitle">Detection view</h2>
+            <span class="small-label">YOLOv8n · SAMPLED FRAMES</span>
+          </div>
+          <div class="detection-stage">
+            <canvas
+              id="outputCanvas"
+              class="hidden"
+              aria-label="Analyzed frame with object labels and bounding boxes"
+            ></canvas>
+            <div id="stageEmpty">
+              <span aria-hidden="true">⌖</span>
+              <h3>A little movement. A lot to discover.</h3>
+              <p>Start your webcam to see what YOLO recognizes.</p>
+            </div>
+          </div>
+          <div class="studio-metrics">
+            <div><span>Objects in frame</span><strong id="objectCount">—</strong></div>
+            <div><span>Server processing</span><strong id="inferenceTime">—</strong></div>
+            <div><span>Analysis rate</span><strong id="analysisRate">—</strong></div>
+          </div>
+          <p class="studio-caption">Boxes belong to the analyzed frame shown here. This view updates at inference speed, not the source frame rate.</p>
+        </section>
+        <aside class="studio-controls">
+
+          <!-- Camera or video selection and start/stop controls -->
+          <section class="source-panel">
+            <div class="panel-title">
+              <h2>Your source</h2>
+              <span class="small-label" id="sourceType">LIVE CAMERA</span>
+            </div>
+            <div id="filePicker" class="hidden">
+              <label class="video-file-label" for="videoFile">Choose a video <span aria-hidden="true">↗</span></label>
+              <input id="videoFile" type="file" accept="video/*">
+              <p id="videoName">MP4, WebM, or another browser-supported video.</p>
+            </div>
+            <video
+              id="sourceVideo"
+              class="hidden"
+              playsinline
+              muted
+              preload="metadata"
+              aria-label="Source video preview"
+            ></video>
+            <p class="source-note" id="sourceNote">Your browser will ask for camera permission. Audio is never requested.</p>
+            <div class="upload-actions">
+              <button class="button primary" id="startDetection">Start webcam ↗</button>
+              <button class="button secondary" id="stopDetection" disabled>Stop</button>
+            </div>
+            <p class="error hidden" id="studioError" role="alert"></p>
+          </section>
+
+          <!-- Detection confidence setting -->
+          <section class="settings-panel">
+            <label for="confidence" class="setting-label">Confidence threshold <output id="confidenceValue" for="confidence">35%</output></label>
+            <input id="confidence" type="range" min="10" max="90" step="5" value="35">
+            <p>Raise the threshold to show only higher-confidence detections.</p>
+          </section>
+
+          <!-- Object labels filled in by yolo.js -->
+          <section class="detections-panel">
+            <h2>In this frame</h2>
+            <ul id="detectionList">
+              <li>Detections will appear here.</li>
+            </ul>
+          </section>
+          <p class="privacy-note">
+            Frames are sent to this Flask server for YOLO analysis and are not saved. Video files
+            are played locally; only sampled frames are sent. Stop releases your camera.
+          </p>
+        </aside>
+      </div>
+      <a class="studio-back" href="/compare">← Compare YOLO and Vision Transformer on an image</a>
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer shell"><a href="/" class="footer-brand">modelcompare<span> / VISION LAB</span></a><span>Made for exploration. Powered by computer vision.</span><span class="footer-dot" aria-hidden="true">✳</span></footer>
+  </body>
+</html>
